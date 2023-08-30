@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "hexlet-code"
+version = "0.1.0"
+description = "difference_calculator"
+authors = ["Tim Volkov <volkov.timm@gmail.com>"]
+readme = "README.md"
+packages = [
+	{include = "difference_calculator"}
+	]
+repository = "https://github.com/volkov-timofey/python-project-50"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+	"Intended Audience :: Tim Volkov",
+	"License :: OSI Approved :: MIT License",
+	"Programming Language :: Python :: 3.10",
+	"Programming Language :: Python :: 3 :: Only",
+	"Programming Language :: Python :: Implementation :: CPython",
+	"Programming Language :: Python :: Implementation :: PyPy",
+	"Typing :: Typed"
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.10"
+flake8 = "^6.1.0"
+
+
+[tool.poetry.scripts]
+gendiff = "difference_calculator.scripts.gendiff:main"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
