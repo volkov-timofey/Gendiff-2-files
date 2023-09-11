@@ -43,8 +43,8 @@ def test_empty_one(path, result=json_to_str('f2_full_diff')):
     Diff empty and not empty files
     '''
     assert gendiff(
-        path + 'file1_empty',
-        path + 'f2_full_diff'
+        path + 'file1_empty.json',
+        path + 'f2_full_diff.json'
     ) == result
 
 
