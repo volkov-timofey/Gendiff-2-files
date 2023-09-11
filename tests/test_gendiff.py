@@ -27,6 +27,16 @@ def path():
     return 'tests/fixtures/'
 
 
+@pytest.fixture
+def result_empty_one():
+    return '{\n\t+ "host": "hexlet.io",\n\t+ "timeout": 50,\n}'
+
+
+@pytest.fixture
+def result_test_equal():
+    return '{\n\t  "host": "hexlet.io",\n\t  "timeout": 50,\n}'
+
+
 def test_empty(path):
     '''
     Diff two empty files
@@ -38,14 +48,14 @@ def test_empty(path):
     ) == empty_str
 
 
-def test_empty_one(path, result=json_to_str('f2_full_diff')):
+def test_empty_one(path, result_empty_one):
     '''
     Diff empty and not empty files
     '''
     assert gendiff(
         path + 'file1_empty.json',
         path + 'f2_full_diff.json'
-    ) == result
+    ) == result_empty_one
 
 
 def test_equal(
