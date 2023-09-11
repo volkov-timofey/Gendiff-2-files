@@ -12,14 +12,14 @@ def json_to_str(file_name):
             open('tests/fixtures/result.txt') as result:
 
         files = {
-            'f2_full_diff': f2_full_diff,
-            'f1_equal': f1_equal,
-            'f2_equal': f2_equal,
-            'result_full_diff': result_full_diff,
-            'result': result,
+            'f2_full_diff': f2_full_diff.read(),
+            'f1_equal': f1_equal.read(),
+            'f2_equal': f2_equal.read(),
+            'result_full_diff': result_full_diff.read(),
+            'result': result.read(),
         }
 
-        return files[file_name].read()
+        return files[file_name]
 
 
 @pytest.fixture
