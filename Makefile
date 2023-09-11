@@ -26,7 +26,7 @@ lint: # run_linter
 	
 full: build publish package-install
 
-selfcheck:
-	poetry check
+check: test lint
 
-check: selfcheck test lint
+selfcheck:
+	check
