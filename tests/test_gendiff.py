@@ -5,11 +5,11 @@ from difference_calculator.scripts.gendiff import generate_diff as gendiff
 
 
 def json_to_str(file_name):
-    with open('fixtures/f2_full_diff.txt') as f2_full_diff, \
-            open('fixtures/f1_equal.txt') as f1_equal, \
-            open('fixtures/f2_equal.txt') as f2_equal, \
-            open('fixtures/result_full_diff.txt') as result_full_diff, \
-            open('fixtures/result.txt') as result:
+    with open('tests/fixtures/f2_full_diff.txt') as f2_full_diff, \
+            open('tests/fixtures/f1_equal.txt') as f1_equal, \
+            open('tests/fixtures/f2_equal.txt') as f2_equal, \
+            open('tests/fixtures/result_full_diff.txt') as result_full_diff, \
+            open('tests/fixtures/result.txt') as result:
 
         files = {
             'f2_full_diff': f2_full_diff,
