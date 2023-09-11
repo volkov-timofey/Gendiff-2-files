@@ -24,7 +24,7 @@ def json_to_str(file_name):
 
 @pytest.fixture
 def path():
-    return 'fixtures/'
+    return 'tests/fixtures/'
 
 
 def test_empty(path):
