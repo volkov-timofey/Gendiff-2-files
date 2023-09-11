@@ -4,7 +4,6 @@ import pytest
 from difference_calculator.scripts.gendiff import generate_diff as gendiff
 
 
-@pytest.fixture
 def json_to_str(file_name):
     with open('fixtures/f2_full_diff.txt') as f2_full_diff, \
             open('fixtures/f1_equal.txt') as f1_equal, \
