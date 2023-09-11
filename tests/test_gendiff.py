@@ -29,12 +29,12 @@ def path():
 
 @pytest.fixture
 def result_empty_one():
-    return '{\n\t+ host: hexlet.io,\n\t+ timeout: 50\n}'
+    return '{\n\t+ host: hexlet.io\n\t+ timeout: 50\n}'
 
 
 @pytest.fixture
 def result_test_equal():
-    return '{\n\t  host: hexlet.io,\n\t  timeout: 50\n}'
+    return '{\n\t  host: hexlet.io\n\t  timeout: 50\n}'
 
 
 def test_empty(path):
