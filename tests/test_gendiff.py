@@ -8,8 +8,8 @@ def json_to_str(file_name):
     with open('tests/fixtures/f2_full_diff.json') as f2_full_diff, \
             open('tests/fixtures/f1_equal.json') as f1_equal, \
             open('tests/fixtures/f2_equal.json') as f2_equal, \
-            open('tests/fixtures/result_full_diff.json') as result_full_diff, \
-            open('tests/fixtures/result.json') as result:
+            open('tests/fixtures/result_full_diff.txt') as result_full_diff, \
+            open('tests/fixtures/result.txt') as result:
 
         files = {
             'f2_full_diff': f2_full_diff.read(),
@@ -60,8 +60,7 @@ def test_empty_one(path, result_empty_one):
 
 def test_equal(
     path,
-    result1=json_to_str('f1_equal'),
-    result2=json_to_str('f2_equal')
+    result_test_equal
 ):
     '''
     Diff equal files
@@ -69,7 +68,7 @@ def test_equal(
     assert gendiff(
         path + 'f1_equal.json',
         path + 'f2_equal.json'
-    ) == result1 == result2
+    ) == result_test_equal
 
 
 def test_full_diff(
