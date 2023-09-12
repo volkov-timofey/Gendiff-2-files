@@ -29,7 +29,7 @@ def path():
 
 @pytest.fixture
 def result_empty_one():
-    return '{\n\t+ host: hexlet.io\n\t+ timeout: 50\n}'
+    return '{\n\t+ proxy: 123.234.53.22,\n\t+ follow: False\n}'
 
 
 @pytest.fixture
