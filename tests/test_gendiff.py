@@ -4,24 +4,6 @@ import pytest
 from difference_calculator.scripts.gendiff import generate_diff as gendiff
 
 
-def json_to_str(file_name):
-    with open('tests/fixtures/f2_full_diff.json') as f2_full_diff, \
-            open('tests/fixtures/f1_equal.json') as f1_equal, \
-            open('tests/fixtures/f2_equal.json') as f2_equal, \
-            open('tests/fixtures/result_full_diff.txt') as result_full_diff, \
-            open('tests/fixtures/result.txt') as result:
-
-        files = {
-            'f2_full_diff': f2_full_diff.read(),
-            'f1_equal': f1_equal.read(),
-            'f2_equal': f2_equal.read(),
-            'result_full_diff': result_full_diff.read(),
-            'result': result.read(),
-        }
-
-        return files[file_name]
-
-
 @pytest.fixture
 def path():
     return 'tests/fixtures/'
@@ -35,6 +17,11 @@ def result_empty_one():
 @pytest.fixture
 def result_test_equal():
     return '{\n\t  host: hexlet.io\n\t  timeout: 50\n}'
+
+
+@pytest.fixture
+def path_yaml():
+    return 'tests/fixtures/yaml/'
 
 
 def test_empty(path):
@@ -71,24 +58,80 @@ def test_equal(
     ) == result_test_equal
 
 
-def test_full_diff(
-    path,
-    result=json_to_str('result_full_diff')
-):
+def test_full_diff(path):
     '''
     Diff full difference files
     '''
-    assert gendiff(
-        path + 'f1_full_diff.json',
-        path + 'f2_full_diff.json'
-    ) == result
+    with open(f'{path}result_full_diff.txt') as result_full_diff:
+        assert gendiff(
+            path + 'f1_full_diff.json',
+            path + 'f2_full_diff.json'
+        ) == result_full_diff.read()
 
 
-def test_common(
-    path,
-    result=json_to_str('result')
-):
+def test_common(path):
     '''
     Diff two files
     '''
-    assert gendiff(path + 'f1.json', path + 'f2.json') == result
+    with open(f'{path}result.txt') as result:
+        assert gendiff(
+            path + 'f1.json',
+            path + 'f2.json'
+        ) == result.read()
+
+
+# gendiff_yml
+def test_empty_yaml(path_yaml):
+    '''
+    Diff two empty files
+    '''
+    empty_str = '{\n}'
+    assert gendiff(
+        path_yaml + 'file1_empty.yml',
+        path_yaml + 'file2_empty.yml'
+    ) == empty_str
+
+
+def test_empty_one_yaml(path_yaml, result_empty_one):
+    '''
+    Diff empty and not empty files
+    '''
+    assert gendiff(
+        path_yaml + 'file1_empty.yml',
+        path_yaml + 'f2_full_diff.yml'
+    ) == result_empty_one
+
+
+def test_equal_yaml(
+    path_yaml,
+    result_test_equal
+):
+    '''
+    Diff equal files
+    '''
+    assert gendiff(
+        path_yaml + 'f1_equal.yml',
+        path_yaml + 'f2_equal.yml'
+    ) == result_test_equal
+
+
+def test_full_diff_yaml(path_yaml):
+    '''
+    Diff full difference files
+    '''
+    with open(f'{path_yaml}result_full_diff.txt') as result_full_diff:
+        assert gendiff(
+            path_yaml + 'f1_full_diff.yml',
+            path_yaml + 'f2_full_diff.yml'
+        ) == result_full_diff.read()
+
+
+def test_common_yaml(path_yaml):
+    '''
+    Diff two files
+    '''
+    with open(f'{path_yaml}result.txt') as result:
+        assert gendiff(
+            path_yaml + 'f1.yml',
+            path_yaml + 'f2.yml'
+        ) == result.read()
