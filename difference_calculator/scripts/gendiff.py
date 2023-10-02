@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
 
-from difference_calculator.parser import create_parser
-from difference_calculator.generate_diff import generate_diff
+from difference_calculator import create_parser, engine
 
 
 def main() -> None:
     parser = create_parser()
-    print(generate_diff(parser.first_file, parser.second_file))
+    print(engine(parser.first_file, parser.second_file, parser.format))
 
 
 if __name__ == '__main__':

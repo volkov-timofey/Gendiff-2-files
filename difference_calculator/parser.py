@@ -1,6 +1,9 @@
 import argparse
 
 
+from difference_calculator import FORMATTER
+
+
 def create_parser() -> object:
     """
     Parser arguments
@@ -10,6 +13,10 @@ def create_parser() -> object:
     )
     parser.add_argument('first_file', type=str)
     parser.add_argument('second_file', type=str)
-    parser.add_argument('-f', '--format', help='set format of output')
+    parser.add_argument(
+        '-f', '--format',
+        help='set format of output',
+        default=FORMATTER
+    )
 
     return parser.parse_args()

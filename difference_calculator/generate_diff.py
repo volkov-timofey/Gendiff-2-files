@@ -1,4 +1,4 @@
-from difference_calculator.open_check_file import open_check_file
+from functools import reduce
 
 
 def is_not_none(dict_: dict, key: str) -> bool:
@@ -8,44 +8,41 @@ def is_not_none(dict_: dict, key: str) -> bool:
     return dict_.get(key) is not None
 
 
-def generate_diff(file1: str, file2: str) -> str:
-    """
-    Compares two configuration files and shows a difference.
-    """
+def diff(dict1, dict2):
 
-    f1_dict, f2_dict = open_check_file(file1, file2)
+    def inner(node1, node2):
+        intersection_keys = node1.keys() & node2.keys()
+        sort_all_keys = sorted(node1.keys() | node2.keys())
 
-    diff_two_files = '{'
+        def searcher(key):
+            key_in_dict1 = is_not_none(node1, key)
 
-    intersection_items = dict(f1_dict.items() & f2_dict.items())
-    f1_diff = dict(f1_dict.items() ^ intersection_items.items())
-    f2_diff = dict(f2_dict.items() ^ intersection_items.items())
+            if key in intersection_keys:
 
-    sort_all_keys = sorted(f1_dict.keys() | f2_dict.keys())
+                if node1[key] == node2[key]:
+                    return {f'  {key}': node1[key]}
 
-    for key in sort_all_keys:
+                if (
+                    isinstance(
+                        node1[key], dict
+                    ) and isinstance(
+                            node2[key], dict
+                          )
+                ):
+                    return {f'  {key}': inner(node1[key], node2[key])}
 
-        # if have itersection key
-        if is_not_none(intersection_items, key):
-            diff_two_files += f'\n\t  {key}: {intersection_items[key]}'
+                else:
+                    return {
+                        f'- {key}': node1[key],
+                        f'+ {key}': node2[key]
+                    }
 
-        # if the key is in both config files and values different
-        elif (
-            is_not_none(f1_diff, key)
-            ) & (
-            is_not_none(f2_diff, key)
-        ):
+            else:
+                return {f'- {key}': node1[key]} \
+                    if key_in_dict1 \
+                    else {f'+ {key}': node2[key]}
 
-            diff_two_files += (
-                f'\n\t- {key}: {f1_diff[key]}\n\t+ {key}: {f2_diff[key]}'
-            )
+        result = reduce(lambda x, y: x | y, map(searcher, sort_all_keys), {})
+        return result
 
-        # if the key is in one of the config files
-        else:
-            diff_two_files += f'\n\t- {key}: {f1_diff[key]}' if (
-                is_not_none(f1_diff, key)
-            ) else f'\n\t+ {key}: {f2_diff[key]}'
-
-    diff_two_files += '\n}'
-
-    return diff_two_files
+    return inner(dict1, dict2)
