@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-from difference_calculator import create_parser, engine
+from gendiff import create_parser, engine
 
 
 def main() -> None:

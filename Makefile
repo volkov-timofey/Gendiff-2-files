@@ -7,7 +7,7 @@ test:
 	poetry run pytest
 
 test-coverage:
-	poetry run pytest --cov=difference_calculator --cov-report xml
+	poetry run pytest --cov=gendiff --cov-report xml
 
 gendiff: # run gendiff
 	poetry run gendiff
@@ -22,7 +22,7 @@ package-install:
 	python3 -m pip install --user --force-reinstall dist/*.whl
 
 lint: # run_linter
-	poetry run flake8 difference_calculator
+	poetry run flake8 gendiff
 	
 full: build publish package-install
 

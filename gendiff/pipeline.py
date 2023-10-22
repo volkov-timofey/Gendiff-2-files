@@ -1,6 +1,6 @@
-from difference_calculator.open_check_file import open_check_file
-from difference_calculator.gendiff import generate_diff
-from difference_calculator import stylish
+from gendiff.open_check_file import open_check_file
+from gendiff.gendiff import generate_diff
+from gendiff import stylish
 
 
 def engine(file1, file2, formatter=stylish) -> str:

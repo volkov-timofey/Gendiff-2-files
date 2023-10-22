@@ -1,9 +1,9 @@
 import argparse
 
 
-from difference_calculator import stylish
-from difference_calculator import plain
-from difference_calculator import json
+from gendiff import stylish
+from gendiff import plain
+from gendiff import json
 
 
 def create_parser() -> object:

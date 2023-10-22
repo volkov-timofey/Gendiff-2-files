@@ -1,10 +1,10 @@
 import pytest
 
 
-from difference_calculator.pipeline import engine
-from difference_calculator import stylish
-from difference_calculator import plain
-from difference_calculator import json
+from gendiff.pipeline import engine
+from gendiff import stylish
+from gendiff import plain
+from gendiff import json
 
 
 FORMATTER = stylish
