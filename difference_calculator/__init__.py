@@ -1,4 +1,4 @@
-from difference_calculator.gendiff import generate_diff
+import difference_calculator.gendiff as gendiff
 from difference_calculator.formatters.stylish import stylish
 from difference_calculator.formatters.plain import plain
 from difference_calculator.formatters.json import json
@@ -7,7 +7,7 @@ from difference_calculator.pipeline import engine
 
 
 __all__ = (
-    'generate_diff',
+    'gendiff',
     'create_parser',
     'engine',
     'stylish',
