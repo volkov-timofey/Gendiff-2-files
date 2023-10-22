@@ -5,7 +5,7 @@ description = "difference_calculator"
 authors = ["Tim Volkov <volkov.timm@gmail.com>"]
 readme = "README.md"
 packages = [
-	{include = "gendiff"}
+	{include = "difference_calculator"}
 	]
 repository = "https://github.com/volkov-timofey/python-project-50"
 classifiers = [
@@ -21,7 +21,7 @@ classifiers = [
 
 
 [tool.poetry.dependencies]
-python = ">=3.10"
+python = "^3.10"
 flake8 = "^6.1.0"
 pytest = "^7.4.1"
 pytest-cov = "^4.1.0"
