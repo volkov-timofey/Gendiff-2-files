@@ -2,10 +2,14 @@ import pytest
 
 
 from difference_calculator.pipeline import engine
-from difference_calculator.stylish import stylish
+from difference_calculator import stylish
+from difference_calculator import plain
+from difference_calculator import json
 
 
 FORMATTER = stylish
+FORMATTER_PLAIN = plain
+FORMATTER_JSON = json
 
 
 @pytest.fixture
@@ -165,11 +169,59 @@ def test_not_flatten_yaml(path, path_yaml):
 
 def test_not_flatten_json(path):
     '''
-    Diff two not flatten files (yaml)
+    Diff two not flatten files (json)
     '''
     with open(f'{path}result_not_flatten.txt') as result:
         assert engine(
             path + 'file1_not_flatten.json',
             path + 'file2_not_flatten.json',
             FORMATTER
+        ) == result.read()
+
+
+def test_flatten_txt_json(path):
+    '''
+    Diff two not flatten files (json)
+    '''
+    with open(f'{path}result_flatten_txt.txt') as result:
+        assert engine(
+            path + 'file1_not_flatten.json',
+            path + 'file2_not_flatten.json',
+            FORMATTER_PLAIN
+        ) == result.read()
+
+
+def test_flatten_txt_yaml(path, path_yaml):
+    '''
+    Diff two not flatten files (yaml)
+    '''
+    with open(f'{path}result_flatten_txt.txt') as result:
+        assert engine(
+            path_yaml + 'file1_not_flatten.yml',
+            path_yaml + 'file2_not_flatten.yml',
+            FORMATTER_PLAIN
+        ) == result.read()
+
+
+def test_json_formatter_json(path):
+    '''
+    Diff two not flatten files (yaml)
+    '''
+    with open(f'{path}result_json.txt') as result:
+        assert engine(
+            path + 'file1_not_flatten.json',
+            path + 'file2_not_flatten.json',
+            FORMATTER_JSON
+        ) == result.read()
+
+
+def test_yaml_formatter_json(path, path_yaml):
+    '''
+    Diff two not flatten files (yaml)
+    '''
+    with open(f'{path}result_json.txt') as result:
+        assert engine(
+            path_yaml + 'file1_not_flatten.yml',
+            path_yaml + 'file2_not_flatten.yml',
+            FORMATTER_JSON
         ) == result.read()
