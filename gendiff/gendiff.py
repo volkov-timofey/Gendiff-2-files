@@ -10,6 +10,19 @@ def is_not_none(dict_: dict, key: str) -> bool:
     return dict_.get(key) is not None
 
 
+def format_value(key, node):
+    """
+    Lower case for bool value
+    """
+    if node[key] is None:
+        return str('null')
+
+    if key in node:
+        return str(node[key]).lower() \
+            if node[key] in [True, False, None, 'null'] \
+            else node[key]
+
+
 def generate_diff(dict1: dict, dict2: dict, formatter=stylish) -> dict:
     """
     Calculates the difference between files
@@ -39,28 +52,31 @@ def generate_diff(dict1: dict, dict2: dict, formatter=stylish) -> dict:
 
             if key in intersection_keys:
 
-                if node1[key] == node2[key]:
-                    return {key: ['unchange', node1[key]]}
+                value1 = format_value(key, node1)
+                value2 = format_value(key, node2)
+
+                if value1 == value2:
+                    return {key: ['unchange', value1]}
 
                 # if values is dict -> recursion
                 if (
                     isinstance(
-                        node1[key], dict
+                        value1, dict
                     ) and isinstance(
-                            node2[key], dict
+                            value2, dict
                           )
                 ):
-                    return {key: inner(node1[key], node2[key])}
+                    return {key: inner(value1, value2)}
 
                 else:
                     return {
-                        key: ['change', node1[key], node2[key]]
+                        key: ['change', value1, value2]
                     }
 
             else:
-                return {key: ['del', node1[key]]} \
+                return {key: ['del', format_value(key, node1)]} \
                     if key_in_dict1 \
-                    else {key: ['add', node2[key]]}
+                    else {key: ['add', format_value(key, node2)]}
 
         result = reduce(lambda x, y: x | y, map(searcher, sort_all_keys), {})
         return result

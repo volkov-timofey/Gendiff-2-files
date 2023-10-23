@@ -19,7 +19,7 @@ def path():
 
 @pytest.fixture
 def result_empty_one():
-    return '{\n  + follow: False\n  + proxy: 123.234.53.22\n}'
+    return '{\n  + follow: false\n  + proxy: 123.234.53.22\n}'
 
 
 @pytest.fixture
