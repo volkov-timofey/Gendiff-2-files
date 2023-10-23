@@ -1,5 +1,6 @@
 from functools import reduce
 from gendiff.open_check_file import open_check_file
+from gendiff.formatters.stylish import stylish
 
 
 def is_not_none(dict_: dict, key: str) -> bool:
@@ -9,7 +10,7 @@ def is_not_none(dict_: dict, key: str) -> bool:
     return dict_.get(key) is not None
 
 
-def generate_diff(dict1: dict, dict2: dict, formatter=None) -> dict:
+def generate_diff(dict1: dict, dict2: dict, formatter=stylish) -> dict:
     """
     Calculates the difference between files
     result - > dict
