@@ -28,8 +28,7 @@ def format_value(key, node):
 
     if key in node:
         return str(node[key]).lower() \
-            if node[key] in [True, False, None, 'null'] \
-            and isinstance(node[key], int) \
+            if node[key] is True or node[key] is False \
             else node[key]
 
 
