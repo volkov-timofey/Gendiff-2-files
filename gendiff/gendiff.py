@@ -1,4 +1,5 @@
 from functools import reduce
+from gendiff.open_check_file import open_check_file
 
 
 def is_not_none(dict_: dict, key: str) -> bool:
@@ -19,6 +20,11 @@ def generate_diff(dict1: dict, dict2: dict, formatter=None) -> dict:
     flag_action:
     add, unchange, change, del
     """
+
+    dict1, dict2 = open_check_file(dict1, dict2) \
+        if isinstance(dict1, str) and isinstance(dict2, str) \
+        else (dict1, dict2)
+
     def inner(node1, node2):
 
         intersection_keys = node1.keys() & node2.keys()
