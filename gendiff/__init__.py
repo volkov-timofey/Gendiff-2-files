@@ -1,4 +1,4 @@
-import gendiff.gendiff as gendiff
+from gendiff.gendiff import generate_diff
 from gendiff.formatters.stylish import stylish
 from gendiff.formatters.plain import plain
 from gendiff.formatters.json import json
@@ -7,7 +7,7 @@ from gendiff.pipeline import engine
 
 
 __all__ = (
-    'gendiff',
+    'generate_diff',
     'create_parser',
     'engine',
     'stylish',
