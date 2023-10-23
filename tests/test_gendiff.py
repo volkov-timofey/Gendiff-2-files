@@ -2,14 +2,11 @@ import pytest
 
 
 from gendiff.pipeline import engine
-from gendiff import stylish
-from gendiff import plain
-from gendiff import json
 
 
-FORMATTER = stylish
-FORMATTER_PLAIN = plain
-FORMATTER_JSON = json
+FORMATTER = 'stylish'
+FORMATTER_PLAIN = 'plain'
+FORMATTER_JSON = 'json'
 
 
 @pytest.fixture

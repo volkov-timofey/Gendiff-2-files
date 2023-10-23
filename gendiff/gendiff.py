@@ -1,6 +1,15 @@
 from functools import reduce
 from gendiff.open_check_file import open_check_file
 from gendiff.formatters.stylish import stylish
+from gendiff.formatters.plain import plain
+from gendiff.formatters.json import json
+
+
+DICT_STYLE = {
+        'plain': plain,
+        'json': json,
+        'stylish': stylish
+    }
 
 
 def is_not_none(dict_: dict, key: str) -> bool:
@@ -23,7 +32,7 @@ def format_value(key, node):
             else node[key]
 
 
-def generate_diff(dict1: dict, dict2: dict, formatter=stylish) -> dict:
+def generate_diff(dict1: dict, dict2: dict, format_name='stylish') -> dict:
     """
     Calculates the difference between files
     result - > dict
@@ -34,6 +43,8 @@ def generate_diff(dict1: dict, dict2: dict, formatter=stylish) -> dict:
     flag_action:
     add, unchange, change, del
     """
+
+    formatter = DICT_STYLE[format_name]
 
     dict1, dict2 = open_check_file(dict1, dict2) \
         if isinstance(dict1, str) and isinstance(dict2, str) \
