@@ -8,7 +8,7 @@ def output_plain(flag_action: str, path: str, value) -> str:
         '[complex value]'
         if isinstance(_, dict)
         else f"'{_}'"
-        if isinstance(_, str) and _ not in ['true', 'false', 'none', 'null']
+        if isinstance(_, str) and _ not in ['true', 'false', 'null']
         else str(_)
         for _ in value
     ]
