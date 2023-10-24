@@ -3,7 +3,7 @@ import pytest
 from gendiff.diff_work.pipeline import engine
 
 
-FORMATTER = 'stylish'
+FORMATTER_STYLISH = 'stylish'
 FORMATTER_PLAIN = 'plain'
 FORMATTER_JSON = 'json'
 
@@ -36,7 +36,7 @@ def test_empty(path):
     assert engine(
         path + 'file1_empty.json',
         path + 'file2_empty.json',
-        FORMATTER
+        FORMATTER_STYLISH
     ) == empty_str
 
 
@@ -47,7 +47,7 @@ def test_empty_one(path, result_empty_one):
     assert engine(
         path + 'file1_empty.json',
         path + 'f2_full_diff.json',
-        FORMATTER
+        FORMATTER_STYLISH
     ) == result_empty_one
 
 
@@ -61,7 +61,7 @@ def test_equal(
     assert engine(
         path + 'f1_equal.json',
         path + 'f2_equal.json',
-        FORMATTER
+        FORMATTER_STYLISH
     ) == result_test_equal
 
 
@@ -73,7 +73,7 @@ def test_full_diff(path):
         assert engine(
             path + 'f1_full_diff.json',
             path + 'f2_full_diff.json',
-            FORMATTER
+            FORMATTER_STYLISH
         ) == result_full_diff.read()
 
 
@@ -85,7 +85,7 @@ def test_common(path):
         assert engine(
             path + 'f1.json',
             path + 'f2.json',
-            FORMATTER
+            FORMATTER_STYLISH
         ) == result.read()
 
 
@@ -98,7 +98,7 @@ def test_empty_yaml(path_yaml):
     assert engine(
         path_yaml + 'file1_empty.yml',
         path_yaml + 'file2_empty.yml',
-        FORMATTER
+        FORMATTER_STYLISH
     ) == empty_str
 
 
@@ -109,7 +109,7 @@ def test_empty_one_yaml(path_yaml, result_empty_one):
     assert engine(
         path_yaml + 'file1_empty.yml',
         path_yaml + 'f2_full_diff.yml',
-        FORMATTER
+        FORMATTER_STYLISH
     ) == result_empty_one
 
 
@@ -123,7 +123,7 @@ def test_equal_yaml(
     assert engine(
         path_yaml + 'f1_equal.yml',
         path_yaml + 'f2_equal.yml',
-        FORMATTER
+        FORMATTER_STYLISH
     ) == result_test_equal
 
 
@@ -135,7 +135,7 @@ def test_full_diff_yaml(path_yaml):
         assert engine(
             path_yaml + 'f1_full_diff.yml',
             path_yaml + 'f2_full_diff.yml',
-            FORMATTER
+            FORMATTER_STYLISH
         ) == result_full_diff.read()
 
 
@@ -147,7 +147,7 @@ def test_common_yaml(path_yaml):
         assert engine(
             path_yaml + 'f1.yml',
             path_yaml + 'f2.yml',
-            FORMATTER
+            FORMATTER_STYLISH
         ) == result.read()
 
 
@@ -159,7 +159,7 @@ def test_not_flatten_yaml(path, path_yaml):
         assert engine(
             path_yaml + 'file1_not_flatten.yml',
             path_yaml + 'file2_not_flatten.yml',
-            FORMATTER
+            FORMATTER_STYLISH
         ) == result.read()
 
 
@@ -171,13 +171,14 @@ def test_not_flatten_json(path):
         assert engine(
             path + 'file1_not_flatten.json',
             path + 'file2_not_flatten.json',
-            FORMATTER
+            FORMATTER_STYLISH
         ) == result.read()
 
 
 def test_flatten_txt_json(path):
     '''
     Diff two not flatten files (json)
+    Plain formatter
     '''
     with open(f'{path}result_flatten_txt.txt') as result:
         assert engine(
@@ -190,6 +191,7 @@ def test_flatten_txt_json(path):
 def test_flatten_txt_yaml(path, path_yaml):
     '''
     Diff two not flatten files (yaml)
+    Plain formatter
     '''
     with open(f'{path}result_flatten_txt.txt') as result:
         assert engine(
@@ -201,7 +203,8 @@ def test_flatten_txt_yaml(path, path_yaml):
 
 def test_json_formatter_json(path):
     '''
-    Diff two not flatten files (yaml)
+    Diff two not flatten files (json)
+    Json formatter
     '''
     with open(f'{path}result_json.txt') as result:
         assert engine(
@@ -214,6 +217,7 @@ def test_json_formatter_json(path):
 def test_yaml_formatter_json(path, path_yaml):
     '''
     Diff two not flatten files (yaml)
+    Json formatter
     '''
     with open(f'{path}result_json.txt') as result:
         assert engine(
