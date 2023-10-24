@@ -1,5 +1,5 @@
 from functools import reduce
-from gendiff.open_check_file import open_check_file
+from gendiff.cli.open_check_file import open_check_file
 from gendiff.formatters.stylish import stylish
 from gendiff.formatters.plain import plain
 from gendiff.formatters.json import json
@@ -12,20 +12,25 @@ def is_not_none(dict_: dict, key: str) -> bool:
     return dict_.get(key) is not None
 
 
-def format_value(key, node):
+def format_bool_value(key, node):
     """
     Lower case for bool value
     """
-    if node[key] is None:
+    value = node[key]
+    if value is None:
         return str('null')
 
     if key in node:
-        return str(node[key]).lower() \
-            if node[key] is True or node[key] is False \
-            else node[key]
+        return str(value).lower() \
+            if value is True or value is False \
+            else value
 
 
-def generate_diff(dict1: dict, dict2: dict, format_name='stylish') -> dict:
+def generate_diff(
+    dict1: dict,
+    dict2: dict,
+    format_name='stylish'
+) -> dict:
     """
     Calculates the difference between files
     result - > dict
@@ -37,14 +42,16 @@ def generate_diff(dict1: dict, dict2: dict, format_name='stylish') -> dict:
     add, unchange, change, del
     """
 
-    DICT_STYLE = {
+    styles = {
         'plain': plain,
         'json': json,
         'stylish': stylish
     }
 
-    formatter = DICT_STYLE[format_name]
+    formatter = styles[format_name]
 
+    # was realise in individual modul
+    # but for test need realise here
     dict1, dict2 = open_check_file(dict1, dict2) \
         if isinstance(dict1, str) and isinstance(dict2, str) \
         else (dict1, dict2)
@@ -62,8 +69,8 @@ def generate_diff(dict1: dict, dict2: dict, format_name='stylish') -> dict:
 
             if key in intersection_keys:
 
-                value1 = format_value(key, node1)
-                value2 = format_value(key, node2)
+                value1 = format_bool_value(key, node1)
+                value2 = format_bool_value(key, node2)
 
                 if value1 == value2:
                     return {key: ['unchange', value1]}
@@ -84,9 +91,9 @@ def generate_diff(dict1: dict, dict2: dict, format_name='stylish') -> dict:
                     }
 
             else:
-                return {key: ['del', format_value(key, node1)]} \
+                return {key: ['del', format_bool_value(key, node1)]} \
                     if key_in_dict1 \
-                    else {key: ['add', format_value(key, node2)]}
+                    else {key: ['add', format_bool_value(key, node2)]}
 
         result = reduce(lambda x, y: x | y, map(searcher, sort_all_keys), {})
         return result

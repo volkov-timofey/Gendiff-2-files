@@ -13,8 +13,8 @@ def create_parser() -> object:
     parser.add_argument(
         '-f', '--format',
         help='set format of output',
-        type=str,
-        default='stylish'
+        default='stylish',
+        type=str
     )
 
     return parser.parse_args()

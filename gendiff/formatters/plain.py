@@ -1,4 +1,8 @@
-def output_plain(flag_action: str, path: str, value) -> str:
+def output_plain(
+    flag_action: str,
+    path: str,
+    value
+) -> str:
     """
     Function for create correct answer
     """
@@ -48,6 +52,7 @@ def plain(dict_: dict) -> str:
                 return output_plain(flag_action, path, value)
 
         result = '\n'.join(list(map(walker, node)))
+
         return result.replace('\n\n', '\n')
 
     return inner(dict_)

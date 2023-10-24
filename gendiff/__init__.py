@@ -1,9 +1,10 @@
-from gendiff.gendiff import generate_diff
+from gendiff.diff_work.gendiff import generate_diff
+from gendiff.diff_work.pipeline import engine
+from gendiff.cli.cli import create_parser
+
 from gendiff.formatters.stylish import stylish
 from gendiff.formatters.plain import plain
 from gendiff.formatters.json import json
-from gendiff.parser import create_parser
-from gendiff.pipeline import engine
 
 
 __all__ = (

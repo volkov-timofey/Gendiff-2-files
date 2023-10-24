@@ -1,7 +1,6 @@
 import pytest
 
-
-from gendiff.pipeline import engine
+from gendiff.diff_work.pipeline import engine
 
 
 FORMATTER = 'stylish'
