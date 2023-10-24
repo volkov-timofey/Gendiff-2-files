@@ -16,5 +16,5 @@ def create_parser() -> object:
         type=str,
         default='stylish'
     )
-    print(parser.parse_args())
+
     return parser.parse_args()
