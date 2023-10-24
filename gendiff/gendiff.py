@@ -5,13 +5,6 @@ from gendiff.formatters.plain import plain
 from gendiff.formatters.json import json
 
 
-DICT_STYLE = {
-        'plain': plain,
-        'json': json,
-        'stylish': stylish
-    }
-
-
 def is_not_none(dict_: dict, key: str) -> bool:
     """
     key in dict
@@ -43,6 +36,12 @@ def generate_diff(dict1: dict, dict2: dict, format_name='stylish') -> dict:
     flag_action:
     add, unchange, change, del
     """
+
+    DICT_STYLE = {
+        'plain': plain,
+        'json': json,
+        'stylish': stylish
+    }
 
     formatter = DICT_STYLE[format_name]
 
