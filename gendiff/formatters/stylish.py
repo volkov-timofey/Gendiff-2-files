@@ -32,10 +32,10 @@ def stylish(dict_: dict, replacer: str = ' ', spaces_count: int = 2) -> str:
                         f'\n{tabulate}{flag_style[1]}{str(key)}: '
                         f'{inner(node[key][2], level + 2)}'
                     ) if flag_action == 'change' \
-                    else (
-                        f'\n{tabulate}{flag_style}{str(key)}: '
-                        f'{inner(node[key][1], level + 2)}'
-                    )
+                        else (
+                            f'\n{tabulate}{flag_style}{str(key)}: '
+                            f'{inner(node[key][1], level + 2)}'
+                        )
 
                 else:
                     return (

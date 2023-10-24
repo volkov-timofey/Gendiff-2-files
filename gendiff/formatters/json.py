@@ -22,10 +22,10 @@ def json(dict_: dict, replacer: str = ' ', spaces_count: int = 2) -> str:
                         f'[{inner(node[key][1], level + 2)}, '
                         f'{inner(node[key][2], level + 2)}],'
                     ) if len(node[key]) > 2 \
-                      else (
+                    else (
                         f'\n{tabulate}"{str(key)}": '
                         f'{inner(node[key][1], level + 2)},'
-                      )
+                    )
 
                 # for not intersection keys
                 else:
