@@ -15,11 +15,11 @@ def stylish(dict_: dict, replacer: str = ' ', spaces_count: int = 2) -> str:
             result = '{'
 
             def walker(key, spaces_count=spaces_count):
-                tabulate = replacer*spaces_count*level
+                tabulate = replacer * spaces_count * level
                 tabulate_for_dict_value = tabulate + replacer * 2
 
                 if isinstance(node[key], dict):
-                    sub_json = inner(node[key], level+2)
+                    sub_json = inner(node[key], level + 2)
                     return f'\n{tabulate_for_dict_value}{str(key)}: {sub_json}'
 
                 if isinstance(node[key], list):
@@ -27,15 +27,15 @@ def stylish(dict_: dict, replacer: str = ' ', spaces_count: int = 2) -> str:
                     flag_style = dict_style[flag_action]
 
                     return (
-                            f'\n{tabulate}{flag_style[0]}{str(key)}: '
-                            f'{inner(node[key][1], level+2)}'
-                            f'\n{tabulate}{flag_style[1]}{str(key)}: '
-                            f'{inner(node[key][2], level+2)}'
-                        ) if flag_action == 'change' \
-                        else (
-                            f'\n{tabulate}{flag_style}{str(key)}: '
-                            f'{inner(node[key][1], level+2)}'
-                        )
+                        f'\n{tabulate}{flag_style[0]}{str(key)}: '
+                        f'{inner(node[key][1], level + 2)}'
+                        f'\n{tabulate}{flag_style[1]}{str(key)}: '
+                        f'{inner(node[key][2], level + 2)}'
+                    ) if flag_action == 'change' \
+                      else (
+                        f'\n{tabulate}{flag_style}{str(key)}: '
+                        f'{inner(node[key][1], level + 2)}'
+                    )
 
                 else:
                     return (

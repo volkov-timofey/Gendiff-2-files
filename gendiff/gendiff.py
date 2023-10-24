@@ -73,8 +73,8 @@ def generate_diff(dict1: dict, dict2: dict, format_name='stylish') -> dict:
                     isinstance(
                         value1, dict
                     ) and isinstance(
-                            value2, dict
-                          )
+                        value2, dict
+                    )
                 ):
                     return {key: inner(value1, value2)}
 
