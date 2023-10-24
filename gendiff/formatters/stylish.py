@@ -35,7 +35,7 @@ def stylish(dict_: dict, replacer: str = ' ', spaces_count: int = 2) -> str:
                         else (
                             f'\n{tabulate}{flag_style}{str(key)}: '
                             f'{inner(node[key][1], level + 2)}'
-                        )
+                    )
 
                 else:
                     return (
