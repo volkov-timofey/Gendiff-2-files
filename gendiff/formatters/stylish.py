@@ -65,15 +65,15 @@ def concate_result_str(node, replacer, spaces_count, level=1):
     if isinstance(node, dict):
         final_tabulate = f'\n{replacer*spaces_count*(level-1)}'
         concate_str = ''.join(list(map(
-                            lambda key: extract_format_pair(
-                                                    key,
-                                                    node,
-                                                    replacer,
-                                                    spaces_count,
-                                                    level
-                                                ),
-                            node
-                        )))
+            lambda key: extract_format_pair(
+                key,
+                node,
+                replacer,
+                spaces_count,
+                level
+            ),
+            node
+        )))
         result = '{' + concate_str + final_tabulate + '}'
         return result
     else:
