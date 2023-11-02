@@ -1,20 +1,20 @@
 import argparse
 
 
-def create_parser() -> object:
+def parse_args() -> object:
     """
     Parser arguments
     """
-    parser = argparse.ArgumentParser(
+    args = argparse.ArgumentParser(
         description='Compares two configuration files and shows a difference.'
     )
-    parser.add_argument('first_file', type=str)
-    parser.add_argument('second_file', type=str)
-    parser.add_argument(
+    args.add_argument('first_file', type=str)
+    args.add_argument('second_file', type=str)
+    args.add_argument(
         '-f', '--format',
         help='set format of output',
         default='stylish',
         type=str
     )
 
-    return parser.parse_args()
+    return args.parse_args()

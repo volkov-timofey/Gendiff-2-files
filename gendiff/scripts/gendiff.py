@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 
-from gendiff import create_parser, engine
+from gendiff import parse_args, pipeline
 
 
 def main() -> None:
-    parser = create_parser()
-    print(engine(parser.first_file, parser.second_file, parser.format))
+    args = parse_args()
+    print(pipeline(args.first_file, args.second_file, args.format))
 
 
 if __name__ == '__main__':

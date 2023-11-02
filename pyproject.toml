@@ -22,14 +22,18 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-flake8 = "^6.1.0"
-pytest = "^7.4.1"
-pytest-cov = "^4.1.0"
 pyyaml = "^6.0.1"
 
 
 [tool.poetry.scripts]
 gendiff = "gendiff.scripts.gendiff:main"
+
+
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.1.0"
+pytest = "^7.4.1"
+pytest-cov = "^4.1.0"
 
 
 [build-system]

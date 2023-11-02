@@ -1,227 +1,89 @@
 import pytest
 
-from gendiff.diff_work.pipeline import engine
+from gendiff.diff_work.pipeline import pipeline
 
 
+path_yaml = 'tests/fixtures/yaml/'
+path = 'tests/fixtures/'
 FORMATTER_STYLISH = 'stylish'
 FORMATTER_PLAIN = 'plain'
 FORMATTER_JSON = 'json'
 
+test_array = [
+    (path + 'file1_empty.json',
+    path + 'file2_empty.json',
+    FORMATTER_STYLISH,
+    path + 'result_empty.txt'),
+    (path + 'file1_empty.json',
+    path + 'f2_full_diff.json',
+    FORMATTER_STYLISH, 
+    path + 'result_empty_one.txt'),
+    (path + 'f1_equal.json',
+    path + 'f2_equal.json',
+    FORMATTER_STYLISH,
+    path + 'result_equal.txt'),
+    (path + 'f1_full_diff.json',
+    path + 'f2_full_diff.json',
+    FORMATTER_STYLISH,
+    path + 'result_full_diff.txt'),
+    (path + 'f1.json',
+    path + 'f2.json',
+    FORMATTER_STYLISH,
+    path + 'result.txt'),
+    (path_yaml + 'file1_empty.yml',
+    path_yaml + 'file2_empty.yml',
+    FORMATTER_STYLISH,
+    path + 'result_empty.txt'),
+    (path_yaml + 'file1_empty.yml',
+    path_yaml + 'f2_full_diff.yml',
+    FORMATTER_STYLISH, 
+    path + 'result_empty_one.txt'),
+    (path_yaml + 'f1_equal.yml',
+    path_yaml + 'f2_equal.yml',
+    FORMATTER_STYLISH,
+    path + 'result_equal.txt'),
+    (path_yaml + 'f1_full_diff.yml',
+    path_yaml + 'f2_full_diff.yml', 
+    FORMATTER_STYLISH,
+    path_yaml + 'result_full_diff.txt'),
+    (path_yaml + 'f1.yml', 
+    path_yaml + 'f2.yml', 
+    FORMATTER_STYLISH,
+    path_yaml + 'result.txt'),
+    (path_yaml + 'file1_not_flatten.yml',
+    path_yaml + 'file2_not_flatten.yml',
+    FORMATTER_STYLISH,
+    path + 'result_not_flatten.txt'),
+    (path + 'file1_not_flatten.json',
+    path + 'file2_not_flatten.json',
+    FORMATTER_STYLISH,
+    path + 'result_not_flatten.txt'),
+    (path + 'file1_not_flatten.json',
+    path + 'file2_not_flatten.json',
+    FORMATTER_PLAIN,
+    path + 'result_flatten_txt.txt'),
+    (path_yaml + 'file1_not_flatten.yml',
+    path_yaml + 'file2_not_flatten.yml',
+    FORMATTER_PLAIN,
+    path + 'result_flatten_txt.txt'),
+    (path + 'file1_not_flatten.json',
+    path + 'file2_not_flatten.json',
+    FORMATTER_JSON,
+    path + 'result_json.txt'),
+    (path_yaml + 'file1_not_flatten.yml',
+    path_yaml + 'file2_not_flatten.yml',
+    FORMATTER_JSON,
+    path + 'result_json.txt')
+]
 
-@pytest.fixture
-def path():
-    return 'tests/fixtures/'
-
-
-@pytest.fixture
-def result_empty_one():
-    return '{\n  + follow: false\n  + proxy: 123.234.53.22\n}'
-
-
-@pytest.fixture
-def result_test_equal():
-    return '{\n    host: hexlet.io\n    timeout: 50\n}'
-
-
-@pytest.fixture
-def path_yaml():
-    return 'tests/fixtures/yaml/'
-
-
-def test_empty(path):
-    '''
-    Diff two empty files
-    '''
-    empty_str = '{\n}'
-    assert engine(
-        path + 'file1_empty.json',
-        path + 'file2_empty.json',
-        FORMATTER_STYLISH
-    ) == empty_str
-
-
-def test_empty_one(path, result_empty_one):
-    '''
-    Diff empty and not empty files
-    '''
-    assert engine(
-        path + 'file1_empty.json',
-        path + 'f2_full_diff.json',
-        FORMATTER_STYLISH
-    ) == result_empty_one
-
-
-def test_equal(
-    path,
-    result_test_equal
-):
-    '''
-    Diff equal files
-    '''
-    assert engine(
-        path + 'f1_equal.json',
-        path + 'f2_equal.json',
-        FORMATTER_STYLISH
-    ) == result_test_equal
-
-
-def test_full_diff(path):
-    '''
-    Diff full difference files
-    '''
-    with open(f'{path}result_full_diff.txt') as result_full_diff:
-        assert engine(
-            path + 'f1_full_diff.json',
-            path + 'f2_full_diff.json',
-            FORMATTER_STYLISH
-        ) == result_full_diff.read()
-
-
-def test_common(path):
-    '''
-    Diff two files
-    '''
-    with open(f'{path}result.txt') as result:
-        assert engine(
-            path + 'f1.json',
-            path + 'f2.json',
-            FORMATTER_STYLISH
-        ) == result.read()
-
-
-# gendiff_yml
-def test_empty_yaml(path_yaml):
-    '''
-    Diff two empty files
-    '''
-    empty_str = '{\n}'
-    assert engine(
-        path_yaml + 'file1_empty.yml',
-        path_yaml + 'file2_empty.yml',
-        FORMATTER_STYLISH
-    ) == empty_str
-
-
-def test_empty_one_yaml(path_yaml, result_empty_one):
-    '''
-    Diff empty and not empty files
-    '''
-    assert engine(
-        path_yaml + 'file1_empty.yml',
-        path_yaml + 'f2_full_diff.yml',
-        FORMATTER_STYLISH
-    ) == result_empty_one
-
-
-def test_equal_yaml(
-    path_yaml,
-    result_test_equal
-):
-    '''
-    Diff equal files
-    '''
-    assert engine(
-        path_yaml + 'f1_equal.yml',
-        path_yaml + 'f2_equal.yml',
-        FORMATTER_STYLISH
-    ) == result_test_equal
-
-
-def test_full_diff_yaml(path_yaml):
-    '''
-    Diff full difference files
-    '''
-    with open(f'{path_yaml}result_full_diff.txt') as result_full_diff:
-        assert engine(
-            path_yaml + 'f1_full_diff.yml',
-            path_yaml + 'f2_full_diff.yml',
-            FORMATTER_STYLISH
-        ) == result_full_diff.read()
-
-
-def test_common_yaml(path_yaml):
-    '''
-    Diff two files
-    '''
-    with open(f'{path_yaml}result.txt') as result:
-        assert engine(
-            path_yaml + 'f1.yml',
-            path_yaml + 'f2.yml',
-            FORMATTER_STYLISH
-        ) == result.read()
-
-
-def test_not_flatten_yaml(path, path_yaml):
-    '''
-    Diff two not flatten files (yaml)
-    '''
-    with open(f'{path}result_not_flatten.txt') as result:
-        assert engine(
-            path_yaml + 'file1_not_flatten.yml',
-            path_yaml + 'file2_not_flatten.yml',
-            FORMATTER_STYLISH
-        ) == result.read()
-
-
-def test_not_flatten_json(path):
-    '''
-    Diff two not flatten files (json)
-    '''
-    with open(f'{path}result_not_flatten.txt') as result:
-        assert engine(
-            path + 'file1_not_flatten.json',
-            path + 'file2_not_flatten.json',
-            FORMATTER_STYLISH
-        ) == result.read()
-
-
-def test_flatten_txt_json(path):
-    '''
-    Diff two not flatten files (json)
-    Plain formatter
-    '''
-    with open(f'{path}result_flatten_txt.txt') as result:
-        assert engine(
-            path + 'file1_not_flatten.json',
-            path + 'file2_not_flatten.json',
-            FORMATTER_PLAIN
-        ) == result.read()
-
-
-def test_flatten_txt_yaml(path, path_yaml):
-    '''
-    Diff two not flatten files (yaml)
-    Plain formatter
-    '''
-    with open(f'{path}result_flatten_txt.txt') as result:
-        assert engine(
-            path_yaml + 'file1_not_flatten.yml',
-            path_yaml + 'file2_not_flatten.yml',
-            FORMATTER_PLAIN
-        ) == result.read()
-
-
-def test_json_formatter_json(path):
-    '''
-    Diff two not flatten files (json)
-    Json formatter
-    '''
-    with open(f'{path}result_json.txt') as result:
-        assert engine(
-            path + 'file1_not_flatten.json',
-            path + 'file2_not_flatten.json',
-            FORMATTER_JSON
-        ) == result.read()
-
-
-def test_yaml_formatter_json(path, path_yaml):
-    '''
-    Diff two not flatten files (yaml)
-    Json formatter
-    '''
-    with open(f'{path}result_json.txt') as result:
-        assert engine(
-            path_yaml + 'file1_not_flatten.yml',
-            path_yaml + 'file2_not_flatten.yml',
-            FORMATTER_JSON
+@pytest.mark.parametrize(
+    'path_f1, path_f2, formatter_name, result',
+    test_array
+)
+def test_function(path_f1, path_f2, formatter_name, result):
+    with open(result) as result:
+        assert pipeline(
+            path_f1,
+            path_f2,
+            formatter_name
         ) == result.read()

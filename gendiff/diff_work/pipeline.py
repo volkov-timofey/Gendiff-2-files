@@ -2,7 +2,7 @@ from gendiff.cli.open_check_file import open_check_file
 from gendiff.diff_work.gendiff import generate_diff
 
 
-def engine(file1: str, file2: str, format_name: str) -> str:
+def pipeline(file1: str, file2: str, format_name: str) -> str:
     """
     Module for open files,
     calculating the difference

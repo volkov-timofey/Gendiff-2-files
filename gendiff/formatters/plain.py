@@ -1,3 +1,20 @@
+def format_value(node):
+    """
+    Lower case for bool value
+    """
+    if isinstance(node, str):
+        return f"'{node}'"
+
+    if node is None:
+        return str('null')
+
+    if node is True or node is False:
+        return str(node).lower()
+
+    else:
+        return str(node)
+
+
 def output_plain(
     flag_action: str,
     path: str,
@@ -11,26 +28,24 @@ def output_plain(
     value = [
         '[complex value]'
         if isinstance(_, dict)
-        else f"'{_}'"
-        if isinstance(_, str) and _ not in ['true', 'false', 'null']
-        else str(_)
+        else format_value(_)
         for _ in value
     ]
 
     if flag_action == 'add':
-        return f'Property {path} was added with value: {str(value[0])}'
+        return f'Property {path} was added with value: {value[0]}'
 
     elif flag_action == 'del':
         return f'Property {path} was removed'
 
     elif flag_action == 'change':
         val_1, val_2 = value
-        return f'Property {path} was updated. From {str(val_1)} to {str(val_2)}'
+        return f'Property {path} was updated. From {val_1} to {val_2}'
     else:
         return ''
 
 
-def plain(dict_: dict) -> str:
+def plain(diff: dict) -> str:
     """
     Plain formatter for visual changes in files
     """
@@ -55,4 +70,4 @@ def plain(dict_: dict) -> str:
 
         return result.replace('\n\n', '\n')
 
-    return inner(dict_)
+    return inner(diff)

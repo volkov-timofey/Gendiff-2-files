@@ -1,27 +1,29 @@
 import json
 import yaml
+from os.path import splitext
 
 
-def open_check_file(file1: str, file2: str) -> (dict, dict):
+def open_check_file(f1_path: str, f2_path: str) -> (dict, dict):
     """
     Check and open file .json, .yml, .yaml
     Output -> dictionary
     """
 
-    suffix = ('.json', '.yml', '.yaml')
-    if file1.endswith(suffix) and file2.endswith(suffix):
-        f1_dict = json.load(open(file1)) \
-            if file1.endswith('.json') \
-            else yaml.safe_load(open(file1)) \
-            if yaml.safe_load(open(file1)) \
-            else {}
-        f2_dict = json.load(open(file2)) \
-            if file2.endswith('.json') \
-            else yaml.safe_load(open(file2)) \
-            if yaml.safe_load(open(file2)) \
-            else {}
-    else:
-        print('Please check files .json or .yaml, .yml')
-        open_check_file(file1, file2)
+    def inner(path: str) -> dict | None:
 
-    return (f1_dict, f2_dict)
+        with open(path) as file:
+            _, ext = splitext(path)
+            if ext not in ('.json', '.yml', '.yaml'):
+                return None
+            else:
+                return json.load(file) \
+                    if ext == '.json' \
+                    else yaml.safe_load(file)
+            # имелся ввиду этот вариант, но обработка пустого файла не проходит
+            # либо json ругается
+            # return json.load(file) or yaml.safe_load(file) or {}
+
+    dict1 = inner(f1_path) if inner(f1_path) else {}
+    dict2 = inner(f2_path) if inner(f2_path) else {}
+
+    return (dict1, dict2)

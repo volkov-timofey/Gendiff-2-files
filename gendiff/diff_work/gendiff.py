@@ -5,13 +5,6 @@ from gendiff.formatters.plain import plain
 from gendiff.formatters.json import json
 
 
-def is_not_none(dict_: dict, key: str) -> bool:
-    """
-    key in dict
-    """
-    return dict_.get(key) is not None
-
-
 def format_bool_value(key, node):
     """
     Lower case for bool value
@@ -24,6 +17,57 @@ def format_bool_value(key, node):
         return str(value).lower() \
             if value is True or value is False \
             else value
+
+
+def extract_value(key, node1, node2):
+    """
+    Extract value from 2 dictionary
+    """
+    intersection_keys = node1.keys() & node2.keys()
+
+    if key in intersection_keys:
+
+        value1 = node1[key]
+        value2 = node2[key]
+
+        if value1 == value2:
+            return {key: ['unchange', value1]}
+
+        # if values is dict -> recursion
+        if (
+            isinstance(
+                value1, dict
+            ) and isinstance(
+                value2, dict
+            )
+        ):
+            return {key: create_diff_dict(value1, value2)}
+
+        else:
+            return {
+                key: ['change', value1, value2]
+            }
+
+    else:
+        return {key: ['del', node1[key]]} \
+            if key in node1 \
+            else {key: ['add', node2[key]]}
+
+
+def create_diff_dict(node1, node2):
+    """
+    Create difference dictionary
+    """
+
+    sort_all_keys = sorted(node1.keys() | node2.keys())
+
+    result = reduce(
+        lambda x, y: x | y,
+        map(lambda key: extract_value(key, node1, node2), sort_all_keys),
+        {}
+    )
+
+    return result
 
 
 def generate_diff(
@@ -56,46 +100,4 @@ def generate_diff(
         if isinstance(dict1, str) and isinstance(dict2, str) \
         else (dict1, dict2)
 
-    def inner(node1, node2):
-
-        intersection_keys = node1.keys() & node2.keys()
-        sort_all_keys = sorted(node1.keys() | node2.keys())
-
-        def searcher(key):
-            """
-            Function searcher, for concate result
-            """
-            key_in_dict1 = is_not_none(node1, key)
-
-            if key in intersection_keys:
-
-                value1 = format_bool_value(key, node1)
-                value2 = format_bool_value(key, node2)
-
-                if value1 == value2:
-                    return {key: ['unchange', value1]}
-
-                # if values is dict -> recursion
-                if (
-                    isinstance(
-                        value1, dict
-                    ) and isinstance(
-                        value2, dict
-                    )
-                ):
-                    return {key: inner(value1, value2)}
-
-                else:
-                    return {
-                        key: ['change', value1, value2]
-                    }
-
-            else:
-                return {key: ['del', format_bool_value(key, node1)]} \
-                    if key_in_dict1 \
-                    else {key: ['add', format_bool_value(key, node2)]}
-
-        result = reduce(lambda x, y: x | y, map(searcher, sort_all_keys), {})
-        return result
-
-    return formatter(inner(dict1, dict2))
+    return formatter(create_diff_dict(dict1, dict2))
