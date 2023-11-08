@@ -55,7 +55,11 @@ def create_diff_dict(node1, node2):
     return result
 
 
-def generate_diff(dict1: dict, dict2: dict, format_name='stylish') -> dict:
+def generate_diff(
+    file1_path: str,
+    file2_path: str,
+    format_name='stylish'
+) -> dict:
     """
     Calculates the difference between files
     result - > dict
@@ -75,24 +79,18 @@ def generate_diff(dict1: dict, dict2: dict, format_name='stylish') -> dict:
 
     formatter = styles[format_name]
 
-    # was realise in individual modul
-    # but for test need realise here
-    '''
-    dict1, dict2 = open_check_file(dict1, dict2) \
-        if isinstance(dict1, str) and isinstance(dict2, str) \
-        else (dict1, dict2)
-    '''
-    return formatter(create_diff_dict(dict1, dict2))
+    file1_dict, file2_dict = convert_files(file1_path, file2_path)
+
+    return formatter(create_diff_dict(file1_dict, file2_dict))
 
 
-def calc_diff(file1: str, file2: str, format_name: str) -> str:
+def calc_diff(file1_path: str, file2_path: str, format_name: str) -> str:
     """
     Module for open files,
     calculating the difference
     and formatter result
     """
 
-    file1_dict, file2_dict = convert_files(file1, file2)
-    diff_str = generate_diff(file1_dict, file2_dict, format_name)
+    diff_str = generate_diff(file1_path, file2_path, format_name)
 
     return diff_str
