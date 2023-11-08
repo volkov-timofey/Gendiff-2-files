@@ -1,8 +1,9 @@
-import json as default_json
+import json
 
 
-def json(diff: dict) -> str:
+def get_json(diff: dict) -> str:
     """
     Formatter json valid string
     """
-    return default_json.dumps(diff)
+
+    return json.dumps(diff)

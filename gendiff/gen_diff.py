@@ -1,22 +1,8 @@
 from functools import reduce
-from gendiff.cli.open_check_file import open_check_file
-from gendiff.formatters.stylish import stylish
-from gendiff.formatters.plain import plain
-from gendiff.formatters.json import json
-
-
-def format_bool_value(key, node):
-    """
-    Lower case for bool value
-    """
-    value = node[key]
-    if value is None:
-        return str('null')
-
-    if key in node:
-        return str(value).lower() \
-            if value is True or value is False \
-            else value
+from gendiff.cli.file_conversion import convert_files
+from gendiff.formatters.stylish import get_stylish
+from gendiff.formatters.plain import get_plain
+from gendiff.formatters.json import get_json
 
 
 def extract_value(key, node1, node2):
@@ -31,27 +17,26 @@ def extract_value(key, node1, node2):
         value2 = node2[key]
 
         if value1 == value2:
-            return {key: ['unchange', value1]}
+            return {key: {'action': 'unchange', 'value': value1}}
 
         # if values is dict -> recursion
-        if (
-            isinstance(
-                value1, dict
-            ) and isinstance(
-                value2, dict
-            )
-        ):
+        if (isinstance(value1, dict) and isinstance(value2, dict)):
             return {key: create_diff_dict(value1, value2)}
 
         else:
             return {
-                key: ['change', value1, value2]
+                key: {
+                    'action': 'change',
+                    'old_value': value1,
+                    'new_value': value2
+                }
             }
 
+    if key in node1:
+        return {key: {'action': 'del', 'value': node1[key]}}
+    
     else:
-        return {key: ['del', node1[key]]} \
-            if key in node1 \
-            else {key: ['add', node2[key]]}
+        return {key: {'action': 'add', 'value': node2[key]}}
 
 
 def create_diff_dict(node1, node2):
@@ -70,11 +55,7 @@ def create_diff_dict(node1, node2):
     return result
 
 
-def generate_diff(
-    dict1: dict,
-    dict2: dict,
-    format_name='stylish'
-) -> dict:
+def generate_diff(dict1: dict, dict2: dict, format_name='stylish') -> dict:
     """
     Calculates the difference between files
     result - > dict
@@ -87,17 +68,31 @@ def generate_diff(
     """
 
     styles = {
-        'plain': plain,
-        'json': json,
-        'stylish': stylish
+        'plain': get_plain,
+        'json': get_json,
+        'stylish': get_stylish
     }
 
     formatter = styles[format_name]
 
     # was realise in individual modul
     # but for test need realise here
+    '''
     dict1, dict2 = open_check_file(dict1, dict2) \
         if isinstance(dict1, str) and isinstance(dict2, str) \
         else (dict1, dict2)
-
+    '''
     return formatter(create_diff_dict(dict1, dict2))
+
+
+def calc_diff(file1: str, file2: str, format_name: str) -> str:
+    """
+    Module for open files,
+    calculating the difference
+    and formatter result
+    """
+
+    file1_dict, file2_dict = convert_files(file1, file2)
+    diff_str = generate_diff(file1_dict, file2_dict, format_name)
+
+    return diff_str

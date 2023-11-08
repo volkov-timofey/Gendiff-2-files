@@ -14,6 +14,7 @@ def parse_args() -> object:
         '-f', '--format',
         help='set format of output',
         default='stylish',
+        choices=['stylish', 'plain', 'json'],
         type=str
     )
 

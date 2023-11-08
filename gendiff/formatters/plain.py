@@ -6,7 +6,7 @@ def format_value(node):
         return f"'{node}'"
 
     if node is None:
-        return str('null')
+        return 'null'
 
     if node is True or node is False:
         return str(node).lower()
@@ -15,59 +15,60 @@ def format_value(node):
         return str(node)
 
 
-def output_plain(
-    flag_action: str,
-    path: str,
-    value
-) -> str:
+def output_plain(action: str, path: str, value: dict) -> str:
     """
     Function for create correct answer
     """
     # path[1:] for delate '.' in path '.common.setting5'
     path = f"'{path[1:]}'"
-    value = [
-        '[complex value]'
-        if isinstance(_, dict)
-        else format_value(_)
-        for _ in value
-    ]
+    value = {key: '[complex value]'
+        if isinstance(value[key], dict)
+        else format_value(value[key])
+        for key in value
+    }
 
-    if flag_action == 'add':
-        return f'Property {path} was added with value: {value[0]}'
+    if action == 'add':
+        return f'Property {path} was added with value: {value["value"]}'
 
-    elif flag_action == 'del':
+    elif action == 'del':
         return f'Property {path} was removed'
 
-    elif flag_action == 'change':
-        val_1, val_2 = value
-        return f'Property {path} was updated. From {val_1} to {val_2}'
-    else:
-        return ''
+    elif action == 'change':
+        return (
+            f'Property {path} was updated. '
+            f'From {value["old_value"]} to {value["new_value"]}'
+        )
 
 
-def plain(diff: dict) -> str:
+def extract_format_pair(key, diff, path):
+    """
+    Extract format result for key (path) and value/values
+    """
+
+    path += f'.{str(key)}'
+
+    if isinstance(diff[key], dict):
+        if diff[key].get('action') is None:
+            return get_plain(diff[key], path)
+
+        elif diff[key].get('action') in ['add', 'del', 'change']:
+            action = diff[key]['action']
+            value = {
+                sub_key: diff[key][sub_key] \
+                for sub_key in diff[key] \
+                if sub_key != 'action'
+            }
+
+            return output_plain(action, path, value)
+
+
+def get_plain(diff: dict, path: str = '') -> str:
     """
     Plain formatter for visual changes in files
     """
-
-    def inner(node, path=''):
-
-        def walker(key, path=path):
-            """
-            Get path from key and value
-            """
-            path += f'.{str(key)}'
-
-            if isinstance(node[key], dict):
-                return inner(node[key], path)
-
-            if isinstance(node[key], list):
-                flag_action, value = node[key][0], node[key][1:]
-
-                return output_plain(flag_action, path, value)
-
-        result = '\n'.join(list(map(walker, node)))
-
-        return result.replace('\n\n', '\n')
-
-    return inner(diff)
+    list_result = [
+        _ for _ in map(
+            lambda key: extract_format_pair(key, diff, path), diff
+        ) if _ 
+    ]
+    return '\n'.join(list_result) 
