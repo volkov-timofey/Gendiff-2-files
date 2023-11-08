@@ -33,14 +33,14 @@ def extract_format_pair(key, node, level):
     level = level + SPACES_COUNT
 
     if isinstance(node[key], dict):
-                
+
         if node[key].get('action') is None:
             sub_json = concate_result_str(
                 node[key],
                 level
             )
             return f'\n{tabulate_for_dict_value}{str(key)}: {sub_json}'
-            
+
         else:
             action = node[key]['action']
             style = DICT_STYLE[action]
@@ -55,8 +55,6 @@ def extract_format_pair(key, node, level):
                     f'\n{tabulate}{style}{str(key)}: '
                     f'{concate_result_str(node[key]["value"], level)}'
             )
-
-
 
     else:
         return (

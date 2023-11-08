@@ -21,7 +21,8 @@ def output_plain(action: str, path: str, value: dict) -> str:
     """
     # path[1:] for delate '.' in path '.common.setting5'
     path = f"'{path[1:]}'"
-    value = {key: '[complex value]'
+    value = {
+        key: '[complex value]'
         if isinstance(value[key], dict)
         else format_value(value[key])
         for key in value
@@ -54,8 +55,8 @@ def extract_format_pair(key, diff, path):
         elif diff[key].get('action') in ['add', 'del', 'change']:
             action = diff[key]['action']
             value = {
-                sub_key: diff[key][sub_key] \
-                for sub_key in diff[key] \
+                sub_key: diff[key][sub_key]
+                for sub_key in diff[key]
                 if sub_key != 'action'
             }
 
@@ -69,6 +70,6 @@ def get_plain(diff: dict, path: str = '') -> str:
     list_result = [
         _ for _ in map(
             lambda key: extract_format_pair(key, diff, path), diff
-        ) if _ 
+        ) if _
     ]
-    return '\n'.join(list_result) 
+    return '\n'.join(list_result)

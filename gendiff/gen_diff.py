@@ -34,7 +34,7 @@ def extract_value(key, node1, node2):
 
     if key in node1:
         return {key: {'action': 'del', 'value': node1[key]}}
-    
+
     else:
         return {key: {'action': 'add', 'value': node2[key]}}
 
