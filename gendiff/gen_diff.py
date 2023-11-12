@@ -1,8 +1,18 @@
 from functools import reduce
-from gendiff.cli.file_conversion import convert_files
+from gendiff.file_conversion import convert_file
 from gendiff.formatters.stylish import get_stylish
 from gendiff.formatters.plain import get_plain
 from gendiff.formatters.json import get_json
+
+
+def activate_nested(value):
+    if isinstance(value, dict):
+        return {
+            'action': 'nested',
+            'value': {key: activate_nested(value[key]) for key in value}
+        }
+    else:
+        return {'action': 'nested', 'value': value}
 
 
 def extract_value(key, node1, node2):
@@ -21,7 +31,10 @@ def extract_value(key, node1, node2):
 
         # if values is dict -> recursion
         if (isinstance(value1, dict) and isinstance(value2, dict)):
-            return {key: create_diff_dict(value1, value2)}
+            return {key: {
+                'action': 'nested',
+                'value': create_diff_dict(value1, value2)
+            }}
 
         else:
             return {
@@ -51,7 +64,6 @@ def create_diff_dict(node1, node2):
         map(lambda key: extract_value(key, node1, node2), sort_all_keys),
         {}
     )
-
     return result
 
 
@@ -79,18 +91,6 @@ def generate_diff(
 
     formatter = styles[format_name]
 
-    file1_dict, file2_dict = convert_files(file1_path, file2_path)
+    file1_dict, file2_dict = convert_file(file1_path), convert_file(file2_path)
 
     return formatter(create_diff_dict(file1_dict, file2_dict))
-
-
-def calc_diff(file1_path: str, file2_path: str, format_name: str) -> str:
-    """
-    Module for open files,
-    calculating the difference
-    and formatter result
-    """
-
-    diff_str = generate_diff(file1_path, file2_path, format_name)
-
-    return diff_str

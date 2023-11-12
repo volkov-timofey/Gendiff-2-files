@@ -8,8 +8,11 @@ def format_value(node):
     if node is None:
         return 'null'
 
-    if node is True or node is False:
+    if isinstance(node, bool):
         return str(node).lower()
+
+    if isinstance(node, dict):
+        return '[complex value]'
 
     else:
         return str(node)
@@ -22,10 +25,7 @@ def output_plain(action: str, path: str, value: dict) -> str:
     # path[1:] for delate '.' in path '.common.setting5'
     path = f"'{path[1:]}'"
     value = {
-        key: '[complex value]'
-        if isinstance(value[key], dict)
-        else format_value(value[key])
-        for key in value
+        key: format_value(value[key]) for key in value
     }
 
     if action == 'add':
@@ -47,20 +47,14 @@ def extract_format_pair(key, diff, path):
     """
 
     path += f'.{str(key)}'
+    value = diff[key]
+    action = value['action']
 
-    if isinstance(diff[key], dict):
-        if diff[key].get('action') is None:
-            return get_plain(diff[key], path)
+    if action == 'nested':
+        return get_plain(value['value'], path)
 
-        elif diff[key].get('action') in ['add', 'del', 'change']:
-            action = diff[key]['action']
-            value = {
-                sub_key: diff[key][sub_key]
-                for sub_key in diff[key]
-                if sub_key != 'action'
-            }
-
-            return output_plain(action, path, value)
+    elif action in ['add', 'del', 'change']:
+        return output_plain(action, path, value)
 
 
 def get_plain(diff: dict, path: str = '') -> str:

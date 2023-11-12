@@ -5,18 +5,22 @@ DICT_STYLE = {
     'add': '+ ',
     'del': '- ',
     'change': {'old_value': '- ', 'new_value': '+ '},
-    'unchange': '  '
+    'unchange': '  ',
+    'nested': ''
 }
 
 
-def format_value(node):
+def format_value(node, level=None):
     """
-    Lower case for bool value
+    Return formatted value
     """
+    if isinstance(node, dict):
+        return concate_result_str(node, level)
+
     if node is None:
         return 'null'
 
-    if node is True or node is False:
+    if isinstance(node, bool):
         return str(node).lower()
 
     else:
@@ -31,35 +35,41 @@ def extract_format_pair(key, node, level):
     tabulate = REPLACER * SPACES_COUNT * level
     tabulate_for_dict_value = tabulate + REPLACER * SPACES_COUNT
     level = level + SPACES_COUNT
+    value = node[key]
 
-    if isinstance(node[key], dict):
+    if isinstance(value, dict):
 
-        if node[key].get('action') is None:
-            sub_json = concate_result_str(
-                node[key],
-                level
-            )
+        action = value.get('action')
+        style = DICT_STYLE.get(action)
+
+        if action == 'nested':
+            sub_json = concate_result_str(value['value'], level)
             return f'\n{tabulate_for_dict_value}{str(key)}: {sub_json}'
 
-        else:
-            action = node[key]['action']
-            style = DICT_STYLE[action]
+        if action in ('add', 'del', 'unchange'):
+            return (
+                    f'\n{tabulate}{style}{str(key)}: '
+                    f'{format_value(value["value"], level)}'
+            )
 
+        if action == 'change':
             return (
                 f'\n{tabulate}{style["old_value"]}{str(key)}: '
-                f'{concate_result_str(node[key]["old_value"], level)}'
+                f'{concate_result_str(value["old_value"], level)}'
                 f'\n{tabulate}{style["new_value"]}{str(key)}: '
-                f'{concate_result_str(node[key]["new_value"], level)}'
-            ) if action == 'change' \
-                else (
-                    f'\n{tabulate}{style}{str(key)}: '
-                    f'{concate_result_str(node[key]["value"], level)}'
+                f'{concate_result_str(value["new_value"], level)}'
+            )
+
+        else:
+            return (
+                f'\n{tabulate_for_dict_value}{str(key)}: '
+                f'{format_value(value, level)}'
             )
 
     else:
         return (
             f'\n{tabulate_for_dict_value}{str(key)}: '
-            f'{concate_result_str(node[key], level)}'
+            f'{format_value(value)}'
         )
 
 

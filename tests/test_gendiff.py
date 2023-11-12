@@ -1,6 +1,6 @@
 import pytest
 
-from gendiff.gen_diff import calc_diff
+from gendiff.gen_diff import generate_diff
 
 
 PATH_YAML = 'tests/fixtures/yaml/'
@@ -83,7 +83,7 @@ test_array = [
 )
 def test_function(path_f1, path_f2, formatter_name, result):
     with open(result) as result:
-        assert calc_diff(
+        assert generate_diff(
             path_f1,
             path_f2,
             formatter_name
