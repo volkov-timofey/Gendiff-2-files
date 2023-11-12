@@ -48,8 +48,8 @@ def extract_format_pair(key, node, level):
 
         if action in ('add', 'del', 'unchange'):
             return (
-                    f'\n{tabulate}{style}{str(key)}: '
-                    f'{format_value(value["value"], level)}'
+                f'\n{tabulate}{style}{str(key)}: '
+                f'{format_value(value["value"], level)}'
             )
 
         if action == 'change':
