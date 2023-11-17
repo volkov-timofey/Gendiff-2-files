@@ -1,64 +1,46 @@
 REPLACER = ' '
 SPACES_COUNT = 2
+TAB_FIX = 2
 
 DICT_STYLE = {
     'add': '+ ',
     'del': '- ',
     'change': {'old_value': '- ', 'new_value': '+ '},
     'unchange': '  ',
-    'nested': ''
+    'nested': '  '
 }
 
 
-def format_value(node, level=None):
+def format_value_dictionary(node: dict, level=None) -> str:
     """
-    Return formatted value
-    """
-    if isinstance(node, dict):
-        return concate_result_str(node, level)
-
-    if node is None:
-        return 'null'
-
-    if isinstance(node, bool):
-        return str(node).lower()
-
-    else:
-        return str(node)
-
-
-def extract_format_pair(key, node, level):
-    """
-    Extracr formatted pair (key, value)
+    Return formatted dictionary value
     """
 
-    tabulate = REPLACER * SPACES_COUNT * level
-    tabulate_for_dict_value = tabulate + REPLACER * SPACES_COUNT
-    level = level + SPACES_COUNT
-    value = node[key]
+    level += TAB_FIX
+    tabulate = REPLACER * (SPACES_COUNT * level - TAB_FIX)
+    tabulate_for_dict_value = REPLACER * (SPACES_COUNT * level)
+
+    key, value = next(iter(node.items()))
 
     if isinstance(value, dict):
 
-        action = value.get('action')
-        style = DICT_STYLE.get(action)
+        if value.get('action'):
+            action = value['action']
+            style = DICT_STYLE[action]
 
-        if action == 'nested':
-            sub_json = concate_result_str(value['value'], level)
-            return f'\n{tabulate_for_dict_value}{str(key)}: {sub_json}'
+            if action in ('add', 'del', 'unchange', 'nested'):
+                return (
+                    f'\n{tabulate}{style}{str(key)}: '
+                    f'{format_value(value["value"], level)}'
+                )
 
-        if action in ('add', 'del', 'unchange'):
-            return (
-                f'\n{tabulate}{style}{str(key)}: '
-                f'{format_value(value["value"], level)}'
-            )
-
-        if action == 'change':
-            return (
-                f'\n{tabulate}{style["old_value"]}{str(key)}: '
-                f'{concate_result_str(value["old_value"], level)}'
-                f'\n{tabulate}{style["new_value"]}{str(key)}: '
-                f'{concate_result_str(value["new_value"], level)}'
-            )
+            if action == 'change':
+                return (
+                    f'\n{tabulate}{style["old_value"]}{str(key)}: '
+                    f'{format_value(value["old_value"], level)}'
+                    f'\n{tabulate}{style["new_value"]}{str(key)}: '
+                    f'{format_value(value["new_value"], level)}'
+                )
 
         else:
             return (
@@ -73,26 +55,39 @@ def extract_format_pair(key, node, level):
         )
 
 
-def concate_result_str(node, level=1):
-
+def format_value(node, level=0):
+    """
+    Return formatted value
+    """
     if isinstance(node, dict):
-        final_tabulate = f'\n{REPLACER*SPACES_COUNT*(level-1)}'
-        concate_str = ''.join(list(map(
-            lambda key: extract_format_pair(
-                key,
-                node,
-                level
-            ),
+        final_tabulate = f'\n{REPLACER * SPACES_COUNT * level}'
+        concat_str = ''.join(list(map(
+            lambda key: format_value_dictionary({key: node[key]}, level=level),
             node
         )))
-        result = '{' + concate_str + final_tabulate + '}'
+        result = '{' + concat_str + final_tabulate + '}'
         return result
+
+    if node is None:
+        return 'null'
+
+    elif isinstance(node, bool):
+        return str(node).lower()
+
     else:
-        return format_value(node)
+        return str(node)
 
 
 def get_stylish(diff: dict) -> str:
     """
     Formatter introduced changes
     """
-    return concate_result_str(diff)
+
+    """
+    Пересобрал оба форматтера stylish и plain,
+    получилась более организованная логика кода,
+
+    если что то не корректно понял, высылайте замечания
+    поправлю)
+    """
+    return format_value(diff)

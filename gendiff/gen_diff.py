@@ -5,16 +5,6 @@ from gendiff.formatters.plain import get_plain
 from gendiff.formatters.json import get_json
 
 
-def activate_nested(value):
-    if isinstance(value, dict):
-        return {
-            'action': 'nested',
-            'value': {key: activate_nested(value[key]) for key in value}
-        }
-    else:
-        return {'action': 'nested', 'value': value}
-
-
 def extract_value(key, node1, node2):
     """
     Extract value from 2 dictionary

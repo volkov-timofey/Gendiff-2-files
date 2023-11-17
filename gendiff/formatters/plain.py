@@ -1,7 +1,20 @@
-def format_value(node):
+def get_plain(diff: dict) -> str:
     """
-    Lower case for bool value
+    Plain formatter for visual changes in files
     """
+    return format_value(diff)
+
+
+def format_value(node, path: str = '') -> str:
+
+    if isinstance(node, dict):
+        list_result = [
+            _ for _ in map(
+                lambda key: format_dictionary({key: node[key]}, path), node
+            ) if _
+        ]
+        return '\n'.join(list_result)
+
     if isinstance(node, str):
         return f"'{node}'"
 
@@ -11,59 +24,39 @@ def format_value(node):
     if isinstance(node, bool):
         return str(node).lower()
 
-    if isinstance(node, dict):
-        return '[complex value]'
-
     else:
         return str(node)
 
 
-def output_plain(action: str, path: str, value: dict) -> str:
+def format_dictionary(node: dict, path: str) -> str:
     """
-    Function for create correct answer
-    """
-    # path[1:] for delate '.' in path '.common.setting5'
-    path = f"'{path[1:]}'"
-    value = {
-        key: format_value(value[key]) for key in value
-    }
-
-    if action == 'add':
-        return f'Property {path} was added with value: {value["value"]}'
-
-    elif action == 'del':
-        return f'Property {path} was removed'
-
-    elif action == 'change':
-        return (
-            f'Property {path} was updated. '
-            f'From {value["old_value"]} to {value["new_value"]}'
-        )
-
-
-def extract_format_pair(key, diff, path):
-    """
-    Extract format result for key (path) and value/values
+    Return formatted dictionary value
     """
 
+    key, value = next(iter(node.items()))
     path += f'.{str(key)}'
-    value = diff[key]
-    action = value['action']
 
-    if action == 'nested':
-        return get_plain(value['value'], path)
+    if isinstance(value, dict):
+        action = value.get('action')
 
-    elif action in ['add', 'del', 'change']:
-        return output_plain(action, path, value)
+        if action == 'nested':
+            return format_value(value['value'], path)
 
+        elif action == 'add':
+            return (
+                f"Property '{path[1:]}' was added with value: "
+                f"{format_value(value['value'])}"
+            )
 
-def get_plain(diff: dict, path: str = '') -> str:
-    """
-    Plain formatter for visual changes in files
-    """
-    list_result = [
-        _ for _ in map(
-            lambda key: extract_format_pair(key, diff, path), diff
-        ) if _
-    ]
-    return '\n'.join(list_result)
+        elif action == 'del':
+            return f"Property '{path[1:]}' was removed"
+
+        elif action == 'change':
+            return (
+                f"Property '{path[1:]}' was updated. "
+                f"From {format_value(value['old_value'])} to "
+                f"{format_value(value['new_value'])}"
+            )
+
+    else:
+        return '[complex value]'

@@ -19,13 +19,6 @@ def load_file_to_dict(file_path: str) -> dict:
     """
     ext, file = read_file(file_path)
 
-    # не помню в какой момент изучения Python
-    # получил информацию, что много if/elif
-    # не является хорошим тоном
-    # поэтому стараюсь минимизировать
-    # как здесь, ниже первого if пройдут
-    # только json и yaml, отсюда и поставил else
-
     if ext == '.json':
         return json.loads(file)
 
