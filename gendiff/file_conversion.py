@@ -28,4 +28,10 @@ def load_file_to_dict(file_path: str) -> dict:
 
 def convert_file(file_path: str) -> dict:
 
-    return load_file_to_dict(file_path) if load_file_to_dict(file_path) else {}
+    dict_file = load_file_to_dict(file_path)
+
+    if dict_file:
+        return dict_file
+
+    else:
+        return {}
