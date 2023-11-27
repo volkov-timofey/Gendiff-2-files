@@ -1,14 +1,11 @@
-PATH = ''
-
-
 def get_plain(diff: dict) -> str:
     """
     Plain formatter for visual changes in files
     """
-    return look_over(diff)
+    return process_nodes(diff)
 
 
-def look_over(node, path=PATH) -> str:
+def process_nodes(node, path='') -> str:
     list_result = [
         _ for _ in map(
             lambda key: format_node({key: node[key]}, path), node
@@ -21,12 +18,12 @@ def format_node(node, path) -> str:
 
     key, value = next(iter(node.items()))
 
-    path += f'.{str(key)}'
+    path += f'.{key}'
 
     action = value.get('action')
 
     if action == 'nested':
-        return look_over(value['value'], path)
+        return process_nodes(value['value'], path)
 
     elif action == 'add':
         return (
@@ -59,7 +56,8 @@ def format_value(node) -> str:
         return 'null'
 
     if isinstance(node, bool):
+        # здесь приведение к строке оставлю,
+        # т.к необходимо привести к нижнему регистру
         return str(node).lower()
 
-    else:
-        return str(node)
+    return node
