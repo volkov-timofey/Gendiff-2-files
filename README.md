@@ -8,10 +8,6 @@
 
 # Visual difference 2 files *.json, *.yaml, *.yml
 
-
-[![asciicast](https://asciinema.org/a/XysyU3QKND4eA8JBH7MSIRJKY.svg)](https://asciinema.org/a/XysyU3QKND4eA8JBH7MSIRJKY)
-
-
 This script that runs in the terminal. 100% Python.
 
 ### Installation
@@ -20,7 +16,7 @@ Make sure you are running at least Python 3.10.0
 Clone the repository and install manually:
 
 ```bash
-$ git clone https://github.com/volkov-timofey/python-project-50.git
+$ git clone https://github.com/volkov-timofey/Gendiff-2-files.git
 $ cd python-project-50
 $ make full # build, publish in pip, package-install
 ```
