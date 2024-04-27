@@ -16,7 +16,7 @@ Clone the repository and install manually:
 
 ```bash
 $ git clone https://github.com/volkov-timofey/Gendiff-2-files.git
-$ cd python-project-50
+$ cd Gendiff-2-files
 $ make full # build, publish in pip, package-install
 ```
 
